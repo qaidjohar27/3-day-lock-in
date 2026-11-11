@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b1220"><title>Three-Day Lock-In | The Nerd</title>
+<style>
+:root{color-scheme:dark;--panel:#121d30;--panel2:#18263d;--line:#293a54;--muted:#91a2bb;--text:#edf3fb;--accent:#8bd3ff;--green:#8ce0b2}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#172941,#0b1220 60%);color:var(--text);font:15px/1.5 system-ui,sans-serif}
+main{max-width:1000px;margin:auto;padding:26px 14px 50px}.eyebrow{color:var(--accent);font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase}
+h1{font-size:clamp(32px,6vw,48px);margin:8px 0;line-height:1.08}.muted{color:var(--muted)}a{color:var(--accent);text-decoration:none}
+.top,.dayhead,.foot{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+button,.link{background:var(--panel);border:1px solid var(--line);color:var(--text);border-radius:10px;padding:9px 12px;font:inherit;cursor:pointer}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:22px 0}.stat,.slot{background:linear-gradient(145deg,var(--panel),#101a2b);border:1px solid var(--line);border-radius:14px}.stat{padding:13px}.stat strong{display:block;font-size:25px}.stat span{font-size:12px;color:var(--muted)}
+.progress{height:8px;background:#26364d;border-radius:20px;overflow:hidden;margin-top:8px}.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,#68bdf0,#8ce0b2)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0}.tabs button[aria-pressed=true]{border-color:var(--accent);background:#203752}
+.dayhead h2{margin:0;font-size:22px}.dayhead p{margin:4px 0;color:var(--muted)}
+.slots{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:9px;margin-top:14px}
+.slot{display:flex;gap:11px;padding:13px;align-items:flex-start}.slot input{width:18px;height:18px;accent-color:#78c9f2;flex:none;margin:3px 0 0}.slot.done{opacity:.62}.slot.done .task{text-decoration:line-through;color:var(--green)}
+.time{font-size:12px;color:var(--accent);font-weight:800}.task{font-weight:700}.detail{font-size:12px;color:var(--muted);margin-top:3px}
+.note{margin-top:20px;padding:14px;background:#101a2b;border:1px solid var(--line);border-radius:12px;color:var(--muted);font-size:13px}
+@media(max-width:520px){main{padding:22px 12px 40px}.stat{padding:10px}.stat strong{font-size:21px}}
+</style></head><body><main>
+<div class="top"><div><div class="eyebrow">The Nerd · SPM 2026</div><h1>Three-Day Lock-In<span style="color:var(--accent)">.</span></h1><div class="muted">Biology → Sejarah → Physics · 12–14 November 2026</div></div><a class="link" href="https://qaidjohar27.github.io/the-nerd/">Main tracker ↗</a></div>
+<section class="stats"><div class="stat"><strong id="done">0</strong><span>Completed blocks</span></div><div class="stat"><strong id="total">0</strong><span>Total blocks</span></div><div class="stat"><strong id="pct">0%</strong><span>Overall progress</span><div class="progress"><i id="bar"></i></div></div></section>
+<div class="tabs"><button data-day="0" aria-pressed="true">Thursday · Biology</button><button data-day="1" aria-pressed="false">Friday · Sejarah</button><button data-day="2" aria-pressed="false">Saturday · Physics</button></div>
+<div class="dayhead"><div><h2 id="title">Thursday · Biology</h2><p id="sub"></p></div><div class="muted" id="dayCount"></div></div><div class="progress"><i id="dayBar"></i></div>
+<div class="slots" id="slots"></div>
+<div class="note"><b style="color:var(--text)">How to use:</b> Tick a block after completing it. For each chapter, focus on core concepts, closed-book recall and a few questions. This is a rapid first-pass coverage plan, not a guarantee of mastery. Sleep is protected. Progress saves automatically in this browser on this device.</div>
+<div class="foot" style="margin-top:16px"><button id="reset">Reset all progress</button><span class="muted">Three-day SPM study sprint</span></div>
+</main><script>
+const days=[
+{title:"Thursday · Biology",sub:"12 November · Form 4 (15 chapters) + Form 5 (13 chapters)",blocks:[
+["3:10–11:10 AM","Sleep","Get 8 hours before starting the study blocks",true],
+["11:10 AM–12:10 PM","Form 4 · Chapters 2–3","Cell Biology; Movement of Substances"],
+["12:10–1:10 PM","Form 4 · Chapters 4–5","Chemical Composition; Metabolism and Enzymes"],
+["1:10–2:10 PM","Form 4 · Chapters 6–7","Cell Division; Cellular Respiration"],
+["2:10–3:10 PM","Form 4 · Chapters 8–9","Respiratory System; Nutrition and Digestion"],
+["3:10–4:10 PM","Form 4 · Chapters 10–11","Transportation; Human Immunity"],
+["4:10–5:10 PM","Form 4 · Chapters 12–13","Coordination and Response; Homeostasis"],
+["5:10–6:10 PM","Form 4 · Chapters 14–15","Support and Locomotion; Sexual Reproduction"],
+["6:10–7:10 PM","Meal break + Form 4 recall","Review diagrams, processes and definitions"],
+["7:10–8:10 PM","Form 5 · Chapters 1–2","Plant Tissue Organisation; Structure and Leaf Function"],
+["8:10–9:10 PM","Form 5 · Chapters 3–4","Nutrition in Plants; Transportation in Plants"],
+["9:10–10:10 PM","Form 5 · Chapters 5–6","Response in Plants; Sexual Reproduction in Flowering Plants"],
+["10:10–11:10 PM","Form 5 · Chapters 7–8","Plant Adaptations; Biodiversity"],
+["11:10 PM–12:10 AM","Form 5 · Chapters 9–10","Ecosystem; Environmental Sustainability"],
+["12:10–1:10 AM","Form 5 · Chapters 11–13","Inheritance; Variation; Genetic Technology"]
+]},
+{title:"Friday · Sejarah",sub:"13 November · Form 4 and Form 5 · 20 chapters",blocks:[
+["9:10–10:10 AM","Form 4 · Bab 1–2","Warisan Negara Bangsa; Kebangkitan Nasionalisme"],
+["10:10–11:10 AM","Form 4 · Bab 3–4","Konflik Dunia; Era Peralihan Kuasa British"],
+["11:10 AM–12:10 PM","Form 4 · Bab 5–6","Persekutuan Tanah Melayu 1948; Ancaman Komunis"],
+["12:10–1:10 PM","Form 4 · Bab 7–8","Usaha ke Arah Kemerdekaan; Pilihan Raya"],
+["1:10–2:10 PM","Form 4 · Bab 9–10","Perlembagaan PTM 1957; Pemasyhuran Kemerdekaan"],
+["2:10–3:10 PM","Lunch + Form 4 recall","Chronology, figures and key events"],
+["3:10–4:10 PM","Form 5 · Bab 1–2","Kedaulatan Negara; Perlembagaan Persekutuan"],
+["4:10–5:10 PM","Form 5 · Bab 3–4","Raja Berperlembagaan; Sistem Persekutuan"],
+["5:10–6:10 PM","Form 5 · Bab 5–6","Pembentukan Malaysia; Cabaran Selepas Pembentukan Malaysia"],
+["6:10–7:10 PM","Form 5 · Bab 7–8","Membina Kesejahteraan; Membina Kemakmuran"],
+["7:10–8:10 PM","Dinner + break","Step away from the desk"],
+["8:10–9:10 PM","Form 5 · Bab 9–10","Dasar Luar Malaysia; Kecemerlangan Malaysia"],
+["9:10–10:10 PM","Full syllabus recall","Timelines, causes, effects, figures and policies"],
+["10:10–11:10 PM","Structured questions","Answer, mark and correct weak areas"]
+]},
+{title:"Saturday · Physics",sub:"14 November · Form 4 (6 chapters) + Form 5 (7 chapters)",blocks:[
+["7:10–8:10 AM","Form 4 · Chapter 1","Measurement"],
+["8:10–9:10 AM","Form 4 · Chapter 2","Force and Motion I"],
+["9:10–10:10 AM","Form 4 · Chapter 3","Gravitation"],
+["10:10–11:10 AM","Form 4 · Chapter 4","Heat"],
+["11:10 AM–12:10 PM","Form 4 · Chapter 5","Waves"],
+["12:10–1:10 PM","Form 4 · Chapter 6","Light and Optics"],
+["1:10–2:10 PM","Lunch + formula recall","Units, symbols and equations"],
+["2:10–3:10 PM","Form 5 · Chapter 1","Force and Motion II"],
+["3:10–4:10 PM","Form 5 · Chapter 2","Pressure"],
+["4:10–5:10 PM","Form 5 · Chapter 3","Electricity"],
+["5:10–6:10 PM","Form 5 · Chapter 4","Electromagnetism"],
+["6:10–7:10 PM","Dinner + break","Rest away from the desk"],
+["7:10–8:10 PM","Form 5 · Chapters 5–6","Electronics; Nuclear Physics"],
+["8:10–9:10 PM","Form 5 · Chapter 7 + mixed questions","Quantum Physics; calculations and corrections"]
+]}];
+const KEY="threeDayLockInProgressV1";let state={};try{state=JSON.parse(localStorage.getItem(KEY)||"{}")||{}}catch(e){}
+let active=0;const $=id=>document.getElementById(id);
+function render(){
+ const total=days.reduce((n,d)=>n+d.blocks.length,0),done=Object.values(state).filter(Boolean).length;
+ $("done").textContent=done;$("total").textContent=total;$("pct").textContent=Math.round(done/total*100)+"%";$("bar").style.width=(done/total*100)+"%";
+ document.querySelectorAll("[data-day]").forEach(b=>b.setAttribute("aria-pressed",String(+b.dataset.day===active)));
+ const d=days[active],n=d.blocks.filter((_,i)=>!!state[active+"-"+i]).length;
+ $("title").textContent=d.title;$("sub").textContent=d.sub;$("dayCount").textContent=n+" / "+d.blocks.length+" blocks";$("dayBar").style.width=(n/d.blocks.length*100)+"%";
+ $("slots").innerHTML=d.blocks.map((b,i)=>'<label class="slot '+(state[active+"-"+i]?'done':'')+'"><input type="checkbox" data-i="'+i+'" '+(state[active+"-"+i]?'checked':'')+'><div><div class="time">'+b[0]+'</div><div class="task">'+b[1]+'</div><div class="detail">'+b[2]+'</div></div></label>').join("");
+ $("slots").querySelectorAll("input").forEach(el=>el.addEventListener("change",e=>{state[active+"-"+e.target.dataset.i]=e.target.checked;localStorage.setItem(KEY,JSON.stringify(state));render()}));
+}
+document.querySelectorAll("[data-day]").forEach(b=>b.addEventListener("click",()=>{active=+b.dataset.day;render()}));
+$("reset").addEventListener("click",()=>{if(confirm("Reset all progress for the three days?")){state={};localStorage.removeItem(KEY);render()}});
+render();
+</script></body></html>
